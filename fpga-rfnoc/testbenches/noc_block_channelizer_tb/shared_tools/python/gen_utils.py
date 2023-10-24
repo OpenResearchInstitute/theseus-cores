@@ -53,7 +53,7 @@ class RingList(list):
             return list.__getslice__(self, lidxTemp, ridxTemp)
 
 class RingBuffer(object):
-    def __init__(self, size, padding=None, dtype=np.float):
+    def __init__(self, size, padding=None, dtype=np.double):      # Changed np.float to np.double - M. Wishek 24Oct2023
         self.size = size
         self.padding = size if padding is None else padding
         self.buffer = np.zeros(self.size + self.padding, dtype=dtype)
@@ -479,7 +479,7 @@ def add_noise_pwr(snr, in_vec, seed_i=None, seed_q=None):
     return (sig_wnoise, complex_noise)
 
 
-def gen_rand_data(seed=42, num_bits=1000, dtype=np.int):
+def gen_rand_data(seed=42, num_bits=1000, dtype=np.int32):      # Changed np.int to np.int32 - M. Wishek 24Oct2023
     """
         Generates a random stream of 1's and 0's
 

@@ -258,13 +258,13 @@ class Channelizer(object):
         taps_gain = max_coeff_val / np.max(np.abs(taps))
         taps *= taps_gain
 
-        taps_fi = (taps * (2 ** self.qvec_coef[1])).astype(np.int)
+        taps_fi = (taps * (2 ** self.qvec_coef[1])).astype(np.int32)  # Changed np.int to np.int32 - M. Wishek 24Oct2023
         poly_fil = np.reshape(taps_fi, (self.M, -1), order='F')
 
         max_input = 2**(self.qvec[0] - 1) - 1
 
         # compute noise and signal gain.
-        n_gain = np.max(np.sqrt(np.sum(np.abs(poly_fil)**2, axis=1)))
+        n_gain = np.max(np.sqrt(np.sum(np.abs(np.double(poly_fil))**2, axis=1))) # Casted poly_fil to np.double - M. Wishek 24Oct2023
         s_gain = np.max(np.abs(np.sum(poly_fil, axis=1)))
 
         snr_gain = 20. * np.log10(s_gain / n_gain)
@@ -607,7 +607,8 @@ class Channelizer(object):
                 ax0.plot(np.real(chan_out[50 + ii, :]))
                 ax1.plot(np.imag(chan_out[50 + ii, :]))
                 title = 'IFFT Output #{}'.format(ii)
-                fig.canvas.set_window_title(title)
+                #fig.canvas.set_window_title(title)      # Changed fig.canvas to fig.suptitle
+                fig.suptitle(title)                      # Needs further review - M. Wishek 24Oct2023
                 fig.savefig(title + '.png', figsize=(12, 10))
 
         return chan_out.transpose()

@@ -75,7 +75,7 @@ def lappend_udec(int_val, bit_val, num_bits):
         unsigned integer int_val
     """
     temp = np.floor(int_val / 2) + ((1 << (num_bits - 1)) * bit_val)
-    return temp.astype(np.int)
+    return temp.astype(np.int32)      # Changed np.int to np.int32 - M. Wishek 24Oct2023
 
 
 def collapse_byte(values):
@@ -138,8 +138,8 @@ class Fi(object):
         """
         num_chars = self.qvec[0]
         if self.comp:
-            real_vals = [dec_to_bin(np.real(value).astype(np.int), num_chars) for value in self.vec]
-            imag_vals = [dec_to_bin(np.imag(value).astype(np.int), num_chars) for value in self.vec]
+            real_vals = [dec_to_bin(np.real(value).astype(np.int32), num_chars) for value in self.vec]      # Changed np.int to np.int32 - M. Wishek 24Oct2023
+            imag_vals = [dec_to_bin(np.imag(value).astype(np.int32), num_chars) for value in self.vec]      # Changed np.int to np.int32 - M. Wishek 24Oct2023
             return [real_val + (",j" + imag_val) for (real_val, imag_val) in zip(real_vals, imag_vals)]
         else:
             return [dec_to_bin(value, num_chars) for value in self.vec]
@@ -176,8 +176,8 @@ class Fi(object):
         """
         num_chars = int(np.ceil(self.qvec[0] / 4.))
         if self.comp:
-            real_vals = dec_to_hex(np.real(self.vec).astype(np.int), num_chars)
-            imag_vals = dec_to_hex(np.imag(self.vec).astype(np.int), num_chars)
+            real_vals = dec_to_hex(np.real(self.vec).astype(np.int32), num_chars)      # Changed np.int to np.int32 - M. Wishek 24Oct2023
+            imag_vals = dec_to_hex(np.imag(self.vec).astype(np.int32), num_chars)      # Changed np.int to np.int32 - M. Wishek 24Oct2023
             return [real_val + (",j" + imag_val) for (real_val, imag_val) in zip(real_vals, imag_vals)]
         else:
             return dec_to_hex(self.vec, num_chars)
@@ -245,7 +245,7 @@ class Fi(object):
 
         vec =  np.arange(range_obj.min, range_obj.max, range_obj.step)
 
-        self.vec = (vec * (2 ** self.qvec[1])).astype(np.int)
+        self.vec = (vec * (2 ** self.qvec[1])).astype(np.int32)      # Changed np.int to np.int32 - M. Wishek 24Oct2023
 
     def __repr__(self):
         c_str = StringIO()
@@ -446,23 +446,23 @@ def str_to_dec(str_val, base=2, signed_val=True):
     if signed_val is False:
         if complex_vals:
             for [sub_idx, value] in np.ndenumerate(val_int):
-                ret_vals[sub_idx] = np.int(value[0:num_chars], base)
+                ret_vals[sub_idx] = np.int32(value[0:num_chars], base)      # Changed np.int to np.int32 - M. Wishek 24Oct2023
                 if complex_vals:
-                    ret_vals[sub_idx] += 1j * np.int(value[imag_lidx:imag_ridx], base)
+                    ret_vals[sub_idx] += 1j * np.int32(value[imag_lidx:imag_ridx], base)      # Changed np.int to np.int32 - M. Wishek 24Oct2023
         else:
             for [sub_idx, value] in np.ndenumerate(val_int):
-                ret_vals[sub_idx] = np.int(value, base)
+                ret_vals[sub_idx] = np.int32(value, base)      # Changed np.int to np.int32 - M. Wishek 24Oct2023
     else:
         offset = str.find(val_int[sub_idx], 'b') + 1
         corr_fac = 2 ** (num_chars - offset)
         if complex_vals:
             offsetI = imag_lidx + 2
         for (sub_idx, value) in np.ndenumerate(val_int):
-            ret_vals[sub_idx] = np.int(value[0:num_chars], base)
+            ret_vals[sub_idx] = np.int32(value[0:num_chars], base)      # Changed np.int to np.int32 - M. Wishek 24Oct2023
             if (value[offset] == '1'):
                 ret_vals[sub_idx] -= corr_fac
             if complex_vals:
-                temp = np.int(value[imag_lidx:imag_ridx], base)
+                temp = np.int32(value[imag_lidx:imag_ridx], base)      # Changed np.int to np.int32 - M. Wishek 24Oct2023
                 if (value[offsetI] == '1'):
                     temp -= corr_fac
                 ret_vals[sub_idx] += 1j * temp
@@ -542,7 +542,7 @@ def ret_num_bitsU(value):
         return 1
 
     temp = np.ceil(np.log2(np.abs(val_new + .5)))
-    return temp.astype(np.int)
+    return temp.astype(np.int32)      # Changed np.int to np.int32 - M. Wishek 24Oct2023
 
 
 def ret_num_bitsS(value):
@@ -911,7 +911,7 @@ def ret_dec_fi(vec, qvec=(16, 15), overflow='wrap', signed=1):
 
     temp = temp.flatten()
     # create fi_obj and return it to the user
-    fi_obj = Fi(temp.astype(np.int), qvec, overflow, signed)
+    fi_obj = Fi(temp.astype(np.int32), qvec, overflow, signed)      # Changed np.int to np.int32 - M. Wishek 24Oct2023
 
     return fi_obj
 

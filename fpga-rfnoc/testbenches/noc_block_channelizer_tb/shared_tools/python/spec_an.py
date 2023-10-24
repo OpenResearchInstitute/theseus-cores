@@ -624,7 +624,8 @@ def plot_spec(wvec, resp, title=None, y_min=None, y_max=None, w_time=False, time
             attach_legend(ax1)
 
     if title is not None:
-        fig.canvas.set_window_title(title)
+        #fig.canvas.set_window_title(title)
+        fig.suptitle(title)
 
     if savefig is True and title is not None:
         # convert spaces to underscores
